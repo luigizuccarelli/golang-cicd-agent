@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: golang-simple-echoservice
+  namespace: poc-demo
+  labels:
+    app: golang-simple-echoservice
+    app.kubernetes.io/component: golang-simple-echoservice
+    app.kubernetes.io/instance: golang-simple-echoservice
+    name: golang-simple-echoservice
+spec:
+  ports:
+    - name: golang-simple-echoservice
+      protocol: TCP
+      port: 9000
+      targetPort: 9000
+  selector:
+    name: golang-simple-echoservice

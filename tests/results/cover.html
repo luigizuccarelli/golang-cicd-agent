@@ -1,0 +1,586 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>connectors: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/connectors/connections.go (90.9%)</option>
+				
+				<option value="file1">lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/connectors/mock-connections.go (90.9%)</option>
+				
+				<option value="file2">lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/handlers/handler.go (96.9%)</option>
+				
+				<option value="file3">lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/service/pipeline.go (94.0%)</option>
+				
+				<option value="file4">lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/validator/validate.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package connectors
+
+import (
+        "bytes"
+        "fmt"
+        "os/exec"
+
+        "github.com/microlib/logger/pkg/multi"
+)
+
+// Connections struct - all backend connections in a common object
+type Connectors struct {
+        Logger *multi.Logger
+}
+
+func NewClientConnections(logger *multi.Logger) Clients <span class="cov8" title="1">{
+        return &amp;Connectors{Logger: logger}
+}</span>
+
+func (c *Connectors) Error(msg string, val ...interface{}) <span class="cov8" title="1">{
+        c.Logger.Errorf(msg, val...)
+}</span>
+
+func (c *Connectors) Info(msg string, val ...interface{}) <span class="cov8" title="1">{
+        c.Logger.Infof(msg, val...)
+}</span>
+
+func (c *Connectors) Debug(msg string, val ...interface{}) <span class="cov8" title="1">{
+        c.Logger.Debugf(msg, val...)
+}</span>
+
+func (c *Connectors) Trace(msg string, val ...interface{}) <span class="cov8" title="1">{
+        c.Logger.Tracef(msg, val...)
+}</span>
+
+func (c *Connectors) ExecOS(path string, command string, params []string, trim bool) (string, error) <span class="cov8" title="1">{
+        var stdout, stderr bytes.Buffer
+        var out string = ""
+        fmt.Println("DEBUG LMZ", path, command, params)
+        cmd := exec.Command(command, params...)
+        cmd.Dir = path
+        cmd.Stdout = &amp;stdout
+        cmd.Stderr = &amp;stderr
+        err := cmd.Run()
+        outStr, errStr := string(stdout.Bytes()), string(stderr.Bytes())
+        if err != nil </span><span class="cov8" title="1">{
+                return errStr, err
+        }</span>
+        <span class="cov8" title="1">if trim </span><span class="cov8" title="1">{
+                if len(outStr) &gt; 1 </span><span class="cov8" title="1">{
+                        out = outStr[:len(outStr)-1]
+                }</span> else<span class="cov0" title="0"> {
+                        out = outStr
+                }</span>
+        } else<span class="cov0" title="0"> {
+                out = outStr
+        }</span>
+        <span class="cov8" title="1">return out, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package connectors
+
+import (
+        "errors"
+        "fmt"
+
+        "github.com/microlib/logger/pkg/multi"
+)
+
+// Mock all connections
+type MockConnectors struct {
+        Logger *multi.Logger
+        Flag   string
+}
+
+func (c *MockConnectors) Error(msg string, val ...interface{}) <span class="cov8" title="1">{
+        c.Logger.Error(fmt.Sprintf(msg, val...))
+}</span>
+
+func (c *MockConnectors) Info(msg string, val ...interface{}) <span class="cov8" title="1">{
+        c.Logger.Info(fmt.Sprintf(msg, val...))
+}</span>
+
+func (c *MockConnectors) Debug(msg string, val ...interface{}) <span class="cov8" title="1">{
+        c.Logger.Debug(fmt.Sprintf(msg, val...))
+}</span>
+
+func (c *MockConnectors) Trace(msg string, val ...interface{}) <span class="cov8" title="1">{
+        c.Logger.Trace(fmt.Sprintf(msg, val...))
+}</span>
+
+func (c *MockConnectors) ExecOS(path string, command string, params []string, trim bool) (string, error) <span class="cov8" title="1">{
+        // force error
+        if c.Flag == "error-rm" &amp;&amp; command == "rm" </span><span class="cov0" title="0">{
+                return "", errors.New("forced rm error")
+        }</span>
+        <span class="cov8" title="1">if c.Flag == "error" &amp;&amp; command != "rm" </span><span class="cov8" title="1">{
+                return "", errors.New("forced error")
+        }</span>
+        <span class="cov8" title="1">return "testing", nil</span>
+}
+
+func NewTestConnectors(logger *multi.Logger, flag string) Clients <span class="cov8" title="1">{
+        conns := &amp;MockConnectors{Logger: logger, Flag: flag}
+        return conns
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package handlers
+
+import (
+        "encoding/json"
+        "errors"
+        "fmt"
+        "io/ioutil"
+        "net/http"
+        "os"
+        "strings"
+
+        "lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/connectors"
+        "lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/schema"
+        "lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/service"
+)
+
+const (
+        CONTENTTYPE     string = "Content-Type"
+        APPLICATIONJSON string = "application/json"
+)
+
+func CICDHandler(w http.ResponseWriter, r *http.Request, con connectors.Clients) <span class="cov8" title="1">{
+        var git *schema.GiteaSchema
+        var mapping *schema.MapBinding
+
+        body, err := ioutil.ReadAll(r.Body)
+        con.Trace("Input data %s", string(body))
+        if err != nil </span><span class="cov8" title="1">{
+                con.Error("CICDHandler could not read body data %v", err)
+                resp := "{\"status\":\"KO\", \"statuscode\":\"500\",\"message\":\"" + fmt.Sprintf("CICDHandler could not read body data %v", err) + "\"}"
+                w.WriteHeader(http.StatusInternalServerError)
+                fmt.Fprintf(w, resp)
+                return
+        }</span>
+
+        <span class="cov8" title="1">err = json.Unmarshal(body, &amp;git)
+        if err != nil </span><span class="cov8" title="1">{
+                con.Error("CICDHandler could not unmarshal to struct %v", err)
+                resp := "{\"status\":\"KO\", \"statuscode\":\"500\",\"message\":\"" + fmt.Sprintf("CICDHandler could not unmarshal struct %v", err) + "\"}"
+                w.WriteHeader(http.StatusInternalServerError)
+                fmt.Fprintf(w, resp)
+                return
+        }</span>
+
+        <span class="cov8" title="1">con.Trace("CICDHandler WEBHOOK_SECRET : %s : %s:", git.Secret, os.Getenv("WEBHOOK_SECRET"))
+        apikey := strings.Trim(os.Getenv("WEBHOOK_SECRET"), "\n")
+        // first check secret
+        if git.Secret != apikey </span><span class="cov8" title="1">{
+                con.Error("CICDHandler api secret invalid")
+                resp := "{\"status\":\"KO\", \"statuscode\":\"500\",\"message\":\"CICDHandler api secret invalid\"}"
+                w.WriteHeader(http.StatusInternalServerError)
+                fmt.Fprintf(w, resp)
+                return
+        }</span>
+
+        <span class="cov8" title="1">con.Debug("Mapping struct %v", git)
+
+        // we now post to our various eventlisteners
+        if git.Action == "published" || git.Action == "closed" </span><span class="cov8" title="1">{
+                // only post on merged true
+                if git.PullRequest.Merged </span><span class="cov8" title="1">{
+                        // post to the dev eventlistener - for our normal cicd dev build
+                        mapping = &amp;schema.MapBinding{
+                                RepoUrl:    git.Repository.CloneURL,
+                                RepoName:   git.Repository.Name,
+                                RepoHash:   git.PullRequest.MergeCommitSha,
+                                ActorName:  git.PullRequest.User.Login,
+                                ActorEmail: git.PullRequest.User.Email,
+                                Message:    git.PullRequest.Title,
+                                Env:        "dev",
+                        }
+                }</span>
+
+                <span class="cov8" title="1">if git.Action == "published" </span><span class="cov8" title="1">{
+                        // check for the prerelease field
+                        if git.Release.Prerelease </span><span class="cov8" title="1">{
+                                // post to the uat eventlistener
+                                mapping = &amp;schema.MapBinding{
+                                        RepoUrl:    git.Repository.CloneURL,
+                                        RepoName:   git.Repository.Name,
+                                        RepoHash:   git.Release.TargetCommitish,
+                                        ActorName:  git.Release.Author.Login,
+                                        ActorEmail: git.Release.Author.Email,
+                                        Message:    git.Release.Name + " " + git.Release.Body,
+                                        TagVersion: git.Release.TagName,
+                                        Env:        "uat",
+                                }
+                        }</span> else<span class="cov8" title="1"> {
+                                // post to prod eventlistener
+                                mapping = &amp;schema.MapBinding{
+                                        RepoUrl:    git.Repository.CloneURL,
+                                        RepoName:   git.Repository.Name,
+                                        RepoHash:   git.Release.TargetCommitish,
+                                        ActorName:  git.Release.Author.Login,
+                                        ActorEmail: git.Release.Author.Email,
+                                        Message:    git.Release.Name + " " + git.Release.Body,
+                                        TagVersion: git.Release.TagName,
+                                        Env:        "prod",
+                                }
+                        }</span>
+                }
+                <span class="cov8" title="1">infra, err := getInfraRepo(mapping.RepoName)
+                if err != nil </span><span class="cov8" title="1">{
+                        resp := "{\"status\":\"KO\", \"statuscode\":\"500\",\"message\":\"" + fmt.Sprintf(" %v", err) + "\"}"
+                        w.WriteHeader(http.StatusInternalServerError)
+                        fmt.Fprintf(w, resp)
+                        return
+                }</span>
+                <span class="cov8" title="1">mapping.InfraRepo = infra
+
+                // execute the CICD pipeline in a seperate light weight thread
+                go service.ExecutePipeline(mapping, con)
+
+                resp := "{\"status\":\"OK\", \"statuscode\":\"200\",\"message\":\"Pipeline started - view progress via cicd web console\"}"
+                w.WriteHeader(http.StatusOK)
+                con.Debug("Result struct for gitea webhook %v", mapping)
+                fmt.Fprintf(w, string(resp))</span>
+        } else<span class="cov0" title="0"> {
+                con.Debug("NOP - no merge or release")
+        }</span>
+}
+
+// getInfraRepo - utility function to get the mapped infra repo
+func getInfraRepo(name string) (string, error) <span class="cov8" title="1">{
+        var result string
+
+        repos := strings.Split(os.Getenv("REPO_MAPPING"), "\n")
+        //prefix := strings.Split(name, "-")
+        for x, _ := range repos </span><span class="cov8" title="1">{
+                if strings.Contains(repos[x], name) </span><span class="cov8" title="1">{
+                        result = strings.Split(repos[x], "=")[1]
+                        break</span>
+                }
+        }
+        <span class="cov8" title="1">if result == "" </span><span class="cov8" title="1">{
+                return "", errors.New("Infra repo not found")
+        }</span>
+        <span class="cov8" title="1">return result, nil</span>
+}
+
+func IsAlive(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+        addHeaders(w, r)
+        fmt.Fprintf(w, "{ \"version\" : \""+os.Getenv("VERSION")+"\" , \"name\": \""+os.Getenv("NAME")+"\" }")
+        return
+}</span>
+
+// headers (with cors) utility
+func addHeaders(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+        if r.Header.Get("API-KEY") != "" </span><span class="cov0" title="0">{
+                w.Header().Set("API_KEY_PT", r.Header.Get("API_KEY"))
+        }</span>
+        <span class="cov8" title="1">w.Header().Set(CONTENTTYPE, APPLICATIONJSON)
+        // use this for cors
+        w.Header().Set("Access-Control-Allow-Origin", "*")
+        w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+        w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package service
+
+import (
+        "encoding/json"
+        "fmt"
+        "io/ioutil"
+        "os"
+        "sort"
+        "strings"
+
+        "lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/connectors"
+        "lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/schema"
+)
+
+// ExecutePipeline - says what it does :)
+func ExecutePipeline(cicd *schema.MapBinding, con connectors.Clients) error <span class="cov8" title="1">{
+        var pipeline []schema.Pipeline
+        // always clone first
+        cicd.Action = "git"
+        _, err := taskHandler(cicd, con)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        // check if the .cicd/pipeline.json file is present in the repo
+        <span class="cov8" title="1">data, err := ioutil.ReadFile(os.Getenv("WORKDIR") + "/" + cicd.RepoName + "/.cicd/pipeline-" + cicd.Env + ".json")
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        // unmarshall the json file to struct
+        <span class="cov8" title="1">err = json.Unmarshal(data, &amp;pipeline)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        // ensure tasks are ordered properly
+        <span class="cov8" title="1">sort.Slice(pipeline[:], func(i, j int) bool </span><span class="cov8" title="1">{
+                return pipeline[i].Id &lt; pipeline[j].Id
+        }</span>)
+
+        <span class="cov8" title="1">for i := 0; i &lt; len(pipeline); i++ </span><span class="cov8" title="1">{
+                cicd.Action = pipeline[i].Task
+                _, e := taskHandler(cicd, con)
+                if e != nil </span><span class="cov0" title="0">{
+                        return e
+                }</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+
+// scmMapper - map params for scm clone
+func scmMapper(cicd *schema.MapBinding) []string <span class="cov8" title="1">{
+        cicd.ActionDetail = "clone"
+        cicd.Workdir = os.Getenv("WORKDIR")
+        return []string{"clone", cicd.RepoUrl, cicd.RepoName}
+}</span>
+
+// makeMapper - map params to execute make
+func makeMapper(cicd *schema.MapBinding) []string <span class="cov8" title="1">{
+        cicd.Workdir = os.Getenv("WORKDIR") + "/" + cicd.RepoName
+        cicd.ActionDetail = cicd.Action
+        cicd.Action = "make"
+        return []string{cicd.ActionDetail}
+}</span>
+
+// sonarMapper - map params to execute sonarqube code analysis
+func sonarMapper(cicd *schema.MapBinding) []string <span class="cov8" title="1">{
+        cicd.Workdir = os.Getenv("WORKDIR") + "/" + cicd.RepoName
+        cicd.ActionDetail = "sonarscan"
+        cicd.Action = os.Getenv("SONARSCAN_PATH") + "/sonar-scanner"
+        args := []string{}
+        return args
+}</span>
+
+// sonarResultsMapper - map params to get quality gate info from sonarqube
+func sonarResultsMapper(cicd *schema.MapBinding) []string <span class="cov8" title="1">{
+        cicd.Workdir = os.Getenv("WORKDIR") + "/" + cicd.RepoName
+        cicd.ActionDetail = "sonar-results"
+        cicd.Action = "curl"
+        args := []string{"-s", "-H", "Content-Type: application/json", "-H", "Accept: application/json", "-u", os.Getenv("SONAR_TOKEN") + ":", os.Getenv("SONAR_URL") + "/api/qualitygates/project_status?projectKey=" + cicd.RepoName}
+        return args
+}</span>
+
+// taskHandler - executes specific cicd tasks
+func taskHandler(cicd *schema.MapBinding, con connectors.Clients) (string, error) <span class="cov8" title="1">{
+        var args []string
+        var err error
+        var out string
+
+        switch cicd.Action </span>{
+        case "git":<span class="cov8" title="1">
+                _, e := os.Stat(os.Getenv("WORKDIR") + "/" + cicd.RepoName)
+                // we always clean the directory before cloning
+                if e == nil </span><span class="cov8" title="1">{
+                        out, err = con.ExecOS(os.Getenv("WORKDIR"), "rm", []string{"-rf", cicd.RepoName}, true)
+                }</span>
+                // prepare console output for webconsole to use
+                <span class="cov8" title="1">os.MkdirAll(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName, os.ModePerm)
+                if err != nil </span><span class="cov8" title="1">{
+                        con.Error("result : %s", out)
+                        con.Error("stderr : %v", err)
+                        return out, err
+                }</span>
+                <span class="cov8" title="1">args = scmMapper(cicd)
+                break</span>
+        case "clean":<span class="cov8" title="1">
+                args = makeMapper(cicd)
+                break</span>
+        case "cover":<span class="cov8" title="1">
+                args = makeMapper(cicd)
+                break</span>
+        case "test":<span class="cov8" title="1">
+                args = makeMapper(cicd)
+                break</span>
+        case "build":<span class="cov8" title="1">
+                args = makeMapper(cicd)
+                break</span>
+        case "sonarscan":<span class="cov8" title="1">
+                props := "sonar.host.url=" + os.Getenv("SONAR_URL") + "\n" + "sonar.login=" + os.Getenv("SONAR_TOKEN") + "\n"
+                f, _ := os.OpenFile(os.Getenv("WORKDIR")+"/"+cicd.RepoName+"/sonar-project.properties", os.O_APPEND|os.O_WRONLY, 0755)
+                f.WriteString(props)
+                f.Close()
+                args = sonarMapper(cicd)
+                break</span>
+        case "sonarresults":<span class="cov8" title="1">
+                args = sonarResultsMapper(cicd)
+                break</span>
+        case "sonaranalyse":<span class="cov8" title="1">
+                data, _ := ioutil.ReadFile(os.Getenv("CICD_CONSOLE_DIR") + "/" + cicd.RepoName + "/sonaranalyse.txt")
+                if strings.Contains(string(data), "{\"projectStatus\":{\"status\":\"OK\"") </span><span class="cov0" title="0">{
+                        args = []string{"-e", "PASS:"}
+                }</span> else<span class="cov8" title="1"> {
+                        args = []string{"-e", "ERROR:"}
+                }</span>
+                <span class="cov8" title="1">cicd.Action = "echo"
+                break</span>
+        case "container":<span class="cov8" title="1">
+                args = makeMapper(cicd)
+                break</span>
+        case "push":<span class="cov8" title="1">
+                args = makeMapper(cicd)
+                break</span>
+        }
+        <span class="cov8" title="1">out, err = con.ExecOS(cicd.Workdir, cicd.Action, args, true)
+        if err != nil </span><span class="cov8" title="1">{
+                // if the file write doesn't work we jus won't see any info on the webconsole - so we just ignore errors
+                ioutil.WriteFile(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName+"/"+cicd.ActionDetail+".txt", []byte("ERROR:&lt;/br&gt;"+out+fmt.Sprintf("%v", err)), 0755)
+        }</span> else<span class="cov8" title="1"> {
+                if out == "" </span><span class="cov0" title="0">{
+                        out = "PASS"
+                }</span>
+                // if the file write doesn't work we jus won't see any info on the webconsole - so we just ignore errors
+                <span class="cov8" title="1">ioutil.WriteFile(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName+"/"+cicd.ActionDetail+".txt", []byte("PASS:&lt;/br&gt;"+out), 0755)</span>
+        }
+        <span class="cov8" title="1">return out, err</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package validator
+
+import (
+        "errors"
+        "fmt"
+        "os"
+        "strconv"
+        "strings"
+
+        "github.com/microlib/logger/pkg/multi"
+)
+
+// checkEnvars - private function, iterates through each item and checks the required field
+func checkEnvar(item string, logger *multi.Logger) error <span class="cov8" title="1">{
+        name := strings.Split(item, ",")[0]
+        required, _ := strconv.ParseBool(strings.Split(item, ",")[1])
+        logger.Trace(fmt.Sprintf("Input paramaters -&gt; name %s : required %t", name, required))
+        if os.Getenv(name) == "" </span><span class="cov8" title="1">{
+                if required </span><span class="cov8" title="1">{
+                        logger.Errorf("%s envar is mandatory please set it", name)
+                        return errors.New(fmt.Sprintf("%s envar is mandatory please set it", name))
+                }</span>
+
+                <span class="cov8" title="1">logger.Errorf(fmt.Sprintf("%s envar is empty please set it", name))</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+
+// ValidateEnvars : public call that groups all envar validations
+// These envars are set via the openshift template
+func ValidateEnvars(logger *multi.Logger) error <span class="cov8" title="1">{
+        items := []string{
+                "LOG_LEVEL,false",
+                "NAME,false",
+                "SERVER_PORT,true",
+                "VERSION,true",
+                "CICD_CONSOLE_DIR,true",
+                "SONAR_TOKEN,true",
+                "SONAR_URL,true",
+                "SONARSCAN_PATH,true",
+                "WORKDIR,true",
+                "WEBHOOK_SECRET,true",
+        }
+        for x := range items </span><span class="cov8" title="1">{
+                if err := checkEnvar(items[x], logger); err != nil </span><span class="cov8" title="1">{
+                        return err
+                }</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

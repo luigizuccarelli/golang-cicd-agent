@@ -1,0 +1,78 @@
+{
+  "secret": "Threefld2020",
+  "action": "published",
+  "release": {
+    "id": 10,
+    "tag_name": "v1.0.1-PROD",
+    "target_commitish": "master",
+    "name": "Release for PROD",
+    "body": "Approved LMZ 01/02/2021 12:53",
+    "url": "https://gitea-cicd.apps.aws2-dev.ocp.14west.io/api/v1/cicd/golang-simple-oc4service/releases/10",
+    "tarball_url": "https://gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/golang-simple-oc4service/archive/v1.0.1-PROD.tar.gz",
+    "zipball_url": "https://gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/golang-simple-oc4service/archive/v1.0.1-PROD.zip",
+    "draft": false,
+    "prerelease": false,
+    "created_at": "2020-07-23T10:37:05Z",
+    "published_at": "2020-07-23T10:37:05Z",
+    "author": {
+      "id": 2,
+      "login": "cicd",
+      "full_name": "",
+      "email": "developers@tfd.ie",
+      "avatar_url": "https://secure.gravatar.com/avatar/18978eee58ccb6e94e1bdc763a5cdb21?d=identicon",
+      "language": "en-US",
+      "is_admin": false,
+      "username": "cicd"
+    },
+    "assets": []
+  },
+  "repository": {
+    "id": 58,
+    "owner": {
+      "id": 2,
+      "login": "cicd",
+      "full_name": "",
+      "email": "developers@tfd.ie",
+      "avatar_url": "https://secure.gravatar.com/avatar/18978eee58ccb6e94e1bdc763a5cdb21?d=identicon",
+      "language": "en-US",
+      "is_admin": false,
+      "username": "cicd"
+    },
+    "name": "golang-simple-oc4service",
+    "full_name": "cicd/golang-simple-oc4service",
+    "description": "",
+    "empty": false,
+    "private": true,
+    "fork": false,
+    "parent": null,
+    "mirror": false,
+    "size": 3716,
+    "html_url": "https://gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/golang-simple-oc4service",
+    "ssh_url": "git@localhost:cicd/golang-simple-oc4service.git",
+    "clone_url": "https://gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/golang-simple-oc4service.git",
+    "website": "",
+    "stars_count": 0,
+    "forks_count": 0,
+    "watchers_count": 1,
+    "open_issues_count": 0,
+    "default_branch": "master",
+    "archived": false,
+    "created_at": "2020-07-23T09:39:03Z",
+    "updated_at": "2020-07-23T10:36:41Z",
+    "permissions": {
+      "admin": true,
+      "push": true,
+      "pull": true
+    }
+  },
+  "sender": {
+    "id": 2,
+    "login": "cicd",
+    "full_name": "",
+    "email": "developers@tfd.ie",
+    "avatar_url": "https://secure.gravatar.com/avatar/18978eee58ccb6e94e1bdc763a5cdb21?d=identicon",
+    "language": "en-US",
+    "is_admin": false,
+    "username": "cicd"
+  }
+}
