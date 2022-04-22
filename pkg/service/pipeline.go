@@ -93,12 +93,18 @@ func taskHandler(cicd *schema.MapBinding, con connectors.Clients) (string, error
 		if e == nil {
 			out, err = con.ExecOS(os.Getenv("WORKDIR"), "rm", []string{"-rf", cicd.RepoName}, true)
 		}
-		// prepare console output for webconsole to use
-		os.MkdirAll(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName, os.ModePerm)
-		if err != nil {
-			con.Error("result : %s", out)
-			con.Error("stderr : %v", err)
-			return out, err
+		_, e = os.Stat(os.Getenv("CICD_CONSOLE_DIR") + "/" + cicd.RepoName)
+		// only clean the conetenst of the console directory (not the directory)
+		if e == nil {
+			out, err = con.ExecOS(os.Getenv("CICD_CONSOLE_DIR"), "rm", []string{"-rf", cicd.RepoName+"/*"}, true)
+		} else {
+			// prepare console output for webconsole to use
+			os.MkdirAll(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName, os.ModePerm)
+			if err != nil {
+				con.Error("result : %s", out)
+				con.Error("stderr : %v", err)
+				return out, err
+			}
 		}
 		args = scmMapper(cicd)
 		break

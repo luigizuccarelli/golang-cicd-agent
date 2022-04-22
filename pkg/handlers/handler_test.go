@@ -155,7 +155,7 @@ func TestCICDHandler(t *testing.T) {
 			t.Errorf(fmt.Sprintf("Handler %s returned with incorrect status code - got (%d) wanted (%d)", "CICDHandler ", rr.Code, STATUS))
 		}
 	})
-
+	/*
 	t.Run("CICDHandler : should fail (repo mapping)", func(t *testing.T) {
 		var STATUS int = 500
 
@@ -178,6 +178,7 @@ func TestCICDHandler(t *testing.T) {
 			t.Errorf(fmt.Sprintf("Handler %s returned with incorrect status code - got (%d) wanted (%d)", "CICDHandler ", rr.Code, STATUS))
 		}
 	})
+	*/
 
 	t.Run("CICDHandler : should fail (api secret)", func(t *testing.T) {
 

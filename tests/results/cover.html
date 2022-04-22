@@ -59,7 +59,7 @@
 				
 				<option value="file1">lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/connectors/mock-connections.go (90.9%)</option>
 				
-				<option value="file2">lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/handlers/handler.go (96.9%)</option>
+				<option value="file2">lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/handlers/handler.go (80.7%)</option>
 				
 				<option value="file3">lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/service/pipeline.go (94.0%)</option>
 				
@@ -287,17 +287,19 @@ func CICDHandler(w http.ResponseWriter, r *http.Request, con connectors.Clients)
                                 }
                         }</span>
                 }
-                <span class="cov8" title="1">infra, err := getInfraRepo(mapping.RepoName)
-                if err != nil </span><span class="cov8" title="1">{
+                // ignore infra mapping for now
+                /*
+                infra, err := getInfraRepo(mapping.RepoName)
+                if err != nil {
                         resp := "{\"status\":\"KO\", \"statuscode\":\"500\",\"message\":\"" + fmt.Sprintf(" %v", err) + "\"}"
                         w.WriteHeader(http.StatusInternalServerError)
                         fmt.Fprintf(w, resp)
                         return
-                }</span>
-                <span class="cov8" title="1">mapping.InfraRepo = infra
-
+                }
+                mapping.InfraRepo = infra
+                */
                 // execute the CICD pipeline in a seperate light weight thread
-                go service.ExecutePipeline(mapping, con)
+                <span class="cov8" title="1">go service.ExecutePipeline(mapping, con)
 
                 resp := "{\"status\":\"OK\", \"statuscode\":\"200\",\"message\":\"Pipeline started - view progress via cicd web console\"}"
                 w.WriteHeader(http.StatusOK)
@@ -309,21 +311,21 @@ func CICDHandler(w http.ResponseWriter, r *http.Request, con connectors.Clients)
 }
 
 // getInfraRepo - utility function to get the mapped infra repo
-func getInfraRepo(name string) (string, error) <span class="cov8" title="1">{
+func getInfraRepo(name string) (string, error) <span class="cov0" title="0">{
         var result string
 
         repos := strings.Split(os.Getenv("REPO_MAPPING"), "\n")
         //prefix := strings.Split(name, "-")
-        for x, _ := range repos </span><span class="cov8" title="1">{
-                if strings.Contains(repos[x], name) </span><span class="cov8" title="1">{
+        for x, _ := range repos </span><span class="cov0" title="0">{
+                if strings.Contains(repos[x], name) </span><span class="cov0" title="0">{
                         result = strings.Split(repos[x], "=")[1]
                         break</span>
                 }
         }
-        <span class="cov8" title="1">if result == "" </span><span class="cov8" title="1">{
+        <span class="cov0" title="0">if result == "" </span><span class="cov0" title="0">{
                 return "", errors.New("Infra repo not found")
         }</span>
-        <span class="cov8" title="1">return result, nil</span>
+        <span class="cov0" title="0">return result, nil</span>
 }
 
 func IsAlive(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{

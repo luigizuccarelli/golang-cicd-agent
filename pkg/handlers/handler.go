@@ -99,6 +99,8 @@ func CICDHandler(w http.ResponseWriter, r *http.Request, con connectors.Clients)
 				}
 			}
 		}
+		// ignore infra mapping for now
+		/*
 		infra, err := getInfraRepo(mapping.RepoName)
 		if err != nil {
 			resp := "{\"status\":\"KO\", \"statuscode\":\"500\",\"message\":\"" + fmt.Sprintf(" %v", err) + "\"}"
@@ -107,7 +109,7 @@ func CICDHandler(w http.ResponseWriter, r *http.Request, con connectors.Clients)
 			return
 		}
 		mapping.InfraRepo = infra
-
+		*/
 		// execute the CICD pipeline in a seperate light weight thread
 		go service.ExecutePipeline(mapping, con)
 

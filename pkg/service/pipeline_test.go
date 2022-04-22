@@ -35,6 +35,7 @@ func TestPipeline(t *testing.T) {
 	})
 
 	t.Run("ExecutePipeline : should fail (rm forced error)", func(t *testing.T) {
+		os.Setenv("WORKDIR", "./tmp")
 		con := connectors.NewTestConnectors(logger, "error-rm")
 		cicd := &schema.MapBinding{RepoName: "golang-test", RepoUrl: "test", Env: "dev"}
 		err := ExecutePipeline(cicd, con)

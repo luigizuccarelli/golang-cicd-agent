@@ -38,7 +38,7 @@ type MapBinding struct {
 	ActorEmail   string `json:"actoremail"`
 	Message      string `json:"message"`
 	TagVersion   string `json:"tagversion,omitempty"`
-	InfraRepo    string `json:"infrarepo"`
+	InfraRepo    string `json:"infrarepo,omitempty"`
 	ActionDetail string `json:"actiondetail"`
 	Action       string `json:"action"`
 	Env          string `json:"env"`
