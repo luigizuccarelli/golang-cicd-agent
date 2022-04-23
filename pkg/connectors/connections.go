@@ -2,7 +2,6 @@ package connectors
 
 import (
 	"bytes"
-	"fmt"
 	"os/exec"
 
 	"github.com/microlib/logger/pkg/multi"
@@ -35,16 +34,15 @@ func (c *Connectors) Trace(msg string, val ...interface{}) {
 
 func (c *Connectors) ExecOS(path string, command string, params []string, trim bool) (string, error) {
 	var stdout, stderr bytes.Buffer
-	var out string = ""
-	fmt.Println("DEBUG LMZ", path, command, params)
+	var out string
 	cmd := exec.Command(command, params...)
 	cmd.Dir = path
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err := cmd.Run()
-	outStr, errStr := string(stdout.Bytes()), string(stderr.Bytes())
+	outStr := stdout.String()
 	if err != nil {
-		return errStr, err
+		return stderr.String(), err
 	}
 	if trim {
 		if len(outStr) > 1 {

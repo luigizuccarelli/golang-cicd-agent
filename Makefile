@@ -6,6 +6,9 @@ build:
 	mkdir -p build
 	go build -o build ./...
 
+verify:
+	golangci-lint run -c .golangci.yaml --deadline=30m 
+
 test:
 	go test -v -coverprofile=tests/results/cover.out ./...
 

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/microlib/logger/pkg/multi"
+
 	"lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/connectors"
 	"lmzsoftware.com/lzuccarelli/golang-cicd-engine/pkg/schema"
 )
@@ -13,8 +14,8 @@ func TestPipeline(t *testing.T) {
 
 	// set up test env
 	logger := multi.NewLogger(multi.HTML, multi.INFO)
-	os.Setenv("CICD_CONSOLE_DIR", "../../../console")
-	os.Setenv("WORKDIR", "../../../workdir")
+	os.Setenv("CICD_CONSOLE_DIR", "../../tests/console")
+	os.Setenv("WORKDIR", "../../tests/workdir")
 
 	t.Run("ExecutePipeline : should pass", func(t *testing.T) {
 		con := connectors.NewTestConnectors(logger, "normal")

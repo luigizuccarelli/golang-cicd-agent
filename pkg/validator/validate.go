@@ -1,7 +1,6 @@
 package validator
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -14,11 +13,11 @@ import (
 func checkEnvar(item string, logger *multi.Logger) error {
 	name := strings.Split(item, ",")[0]
 	required, _ := strconv.ParseBool(strings.Split(item, ",")[1])
-	logger.Trace(fmt.Sprintf("Input paramaters -> name %s : required %t", name, required))
+	logger.Trace(fmt.Sprintf("Input parameters -> name %s : required %t", name, required))
 	if os.Getenv(name) == "" {
 		if required {
 			logger.Errorf("%s envar is mandatory please set it", name)
-			return errors.New(fmt.Sprintf("%s envar is mandatory please set it", name))
+			return fmt.Errorf("%s envar is mandatory please set it", name)
 		}
 
 		logger.Errorf(fmt.Sprintf("%s envar is empty please set it", name))

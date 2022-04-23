@@ -96,10 +96,16 @@ func taskHandler(cicd *schema.MapBinding, con connectors.Clients) (string, error
 		_, e = os.Stat(os.Getenv("CICD_CONSOLE_DIR") + "/" + cicd.RepoName)
 		// only clean the conetenst of the console directory (not the directory)
 		if e == nil {
-			out, err = con.ExecOS(os.Getenv("CICD_CONSOLE_DIR"), "rm", []string{"-rf", cicd.RepoName+"/*"}, true)
+			_, err = con.ExecOS(os.Getenv("CICD_CONSOLE_DIR"), "rm", []string{"-rf", cicd.RepoName + "/*"}, true)
+			if err != nil {
+				con.Error("Execution failed : %s", err)
+			}
 		} else {
 			// prepare console output for webconsole to use
-			os.MkdirAll(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName, os.ModePerm)
+			fErr := os.MkdirAll(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName, os.ModePerm)
+			if fErr != nil {
+				con.Error("Make dir failed : %s", fErr)
+			}
 			if err != nil {
 				con.Error("result : %s", out)
 				con.Error("stderr : %v", err)
@@ -107,29 +113,27 @@ func taskHandler(cicd *schema.MapBinding, con connectors.Clients) (string, error
 			}
 		}
 		args = scmMapper(cicd)
-		break
 	case "clean":
 		args = makeMapper(cicd)
-		break
+	case "verify":
+		args = makeMapper(cicd)
 	case "cover":
 		args = makeMapper(cicd)
-		break
 	case "test":
 		args = makeMapper(cicd)
-		break
 	case "build":
 		args = makeMapper(cicd)
-		break
 	case "sonarscan":
 		props := "sonar.host.url=" + os.Getenv("SONAR_URL") + "\n" + "sonar.login=" + os.Getenv("SONAR_TOKEN") + "\n"
 		f, _ := os.OpenFile(os.Getenv("WORKDIR")+"/"+cicd.RepoName+"/sonar-project.properties", os.O_APPEND|os.O_WRONLY, 0755)
-		f.WriteString(props)
+		_, fErr := f.WriteString(props)
+		if fErr != nil {
+			con.Error("Failed to write %v", fErr)
+		}
 		f.Close()
 		args = sonarMapper(cicd)
-		break
 	case "sonarresults":
 		args = sonarResultsMapper(cicd)
-		break
 	case "sonaranalyse":
 		data, _ := ioutil.ReadFile(os.Getenv("CICD_CONSOLE_DIR") + "/" + cicd.RepoName + "/sonaranalyse.txt")
 		if strings.Contains(string(data), "{\"projectStatus\":{\"status\":\"OK\"") {
@@ -138,24 +142,25 @@ func taskHandler(cicd *schema.MapBinding, con connectors.Clients) (string, error
 			args = []string{"-e", "ERROR:"}
 		}
 		cicd.Action = "echo"
-		break
 	case "container":
 		args = makeMapper(cicd)
-		break
 	case "push":
 		args = makeMapper(cicd)
-		break
 	}
 	out, err = con.ExecOS(cicd.Workdir, cicd.Action, args, true)
 	if err != nil {
-		// if the file write doesn't work we jus won't see any info on the webconsole - so we just ignore errors
-		ioutil.WriteFile(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName+"/"+cicd.ActionDetail+".txt", []byte("ERROR:</br>"+out+fmt.Sprintf("%v", err)), 0755)
+		fErr := ioutil.WriteFile(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName+"/"+cicd.ActionDetail+".txt", []byte("ERROR:</br>"+out+fmt.Sprintf("%v", err)), 0755)
+		if fErr != nil {
+			con.Error("Failed to write %v", fErr)
+		}
 	} else {
 		if out == "" {
 			out = "PASS"
 		}
-		// if the file write doesn't work we jus won't see any info on the webconsole - so we just ignore errors
-		ioutil.WriteFile(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName+"/"+cicd.ActionDetail+".txt", []byte("PASS:</br>"+out), 0755)
+		fErr := ioutil.WriteFile(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName+"/"+cicd.ActionDetail+".txt", []byte("PASS:</br>"+out), 0755)
+		if fErr != nil {
+			con.Error("Failed to write %v", fErr)
+		}
 	}
 	return out, err
 }

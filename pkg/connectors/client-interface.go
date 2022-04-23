@@ -1,6 +1,6 @@
 package connectors
 
-// Client Interface - used as a receiver and can be overriden for testing
+// Client Interface - used as a receiver and can be overridden for testing
 type Clients interface {
 	Error(string, ...interface{})
 	Info(string, ...interface{})
