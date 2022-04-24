@@ -74,7 +74,7 @@ func sonarMapper(cicd *schema.MapBinding) []string {
 // sonarResultsMapper - map params to get quality gate info from sonarqube
 func sonarResultsMapper(cicd *schema.MapBinding) []string {
 	cicd.Workdir = os.Getenv("WORKDIR") + "/" + cicd.RepoName
-	cicd.ActionDetail = "sonar-results"
+	cicd.ActionDetail = "sonarresults"
 	cicd.Action = "curl"
 	args := []string{"-s", "-H", "Content-Type: application/json", "-H", "Accept: application/json", "-u", os.Getenv("SONAR_TOKEN") + ":", os.Getenv("SONAR_URL") + "/api/qualitygates/project_status?projectKey=" + cicd.RepoName}
 	return args
@@ -86,6 +86,7 @@ func taskHandler(cicd *schema.MapBinding, con connectors.Clients) (string, error
 	var err error
 	var out string
 
+	con.Info("Executing pipeline for %s", cicd.Action)
 	switch cicd.Action {
 	case "git":
 		_, e := os.Stat(os.Getenv("WORKDIR") + "/" + cicd.RepoName)
@@ -135,21 +136,23 @@ func taskHandler(cicd *schema.MapBinding, con connectors.Clients) (string, error
 	case "sonarresults":
 		args = sonarResultsMapper(cicd)
 	case "sonaranalyse":
-		data, _ := ioutil.ReadFile(os.Getenv("CICD_CONSOLE_DIR") + "/" + cicd.RepoName + "/sonaranalyse.txt")
+		data, _ := ioutil.ReadFile(os.Getenv("CICD_CONSOLE_DIR") + "/" + cicd.RepoName + "/sonarresults.txt")
 		if strings.Contains(string(data), "{\"projectStatus\":{\"status\":\"OK\"") {
 			args = []string{"-e", "PASS:"}
 		} else {
 			args = []string{"-e", "ERROR:"}
 		}
 		cicd.Action = "echo"
+		cicd.ActionDetail = "sonaranalyse"
 	case "container":
 		args = makeMapper(cicd)
 	case "push":
 		args = makeMapper(cicd)
 	}
 	out, err = con.ExecOS(cicd.Workdir, cicd.Action, args, true)
+	con.Trace("Execute process %s %s", cicd.Action, out)
 	if err != nil {
-		fErr := ioutil.WriteFile(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName+"/"+cicd.ActionDetail+".txt", []byte("ERROR:</br>"+out+fmt.Sprintf("%v", err)), 0755)
+		fErr := ioutil.WriteFile(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName+"/"+cicd.ActionDetail+".txt", []byte("ERROR:<br"+out+fmt.Sprintf("%v", err)), 0755)
 		if fErr != nil {
 			con.Error("Failed to write %v", fErr)
 		}
@@ -157,7 +160,7 @@ func taskHandler(cicd *schema.MapBinding, con connectors.Clients) (string, error
 		if out == "" {
 			out = "PASS"
 		}
-		fErr := ioutil.WriteFile(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName+"/"+cicd.ActionDetail+".txt", []byte("PASS:</br>"+out), 0755)
+		fErr := ioutil.WriteFile(os.Getenv("CICD_CONSOLE_DIR")+"/"+cicd.RepoName+"/"+cicd.ActionDetail+".txt", []byte("PASS:<br>"+out), 0755)
 		if fErr != nil {
 			con.Error("Failed to write %v", fErr)
 		}

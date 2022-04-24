@@ -23,8 +23,8 @@ func (errReader) Read(p []byte) (n int, err error) {
 
 func TestCICDHandler(t *testing.T) {
 
-	logger := multi.NewLogger(multi.COLOR, multi.INFO)
-	os.Setenv("WEBHOOK_SECRET", "Threefld2020")
+	logger := multi.NewLogger(multi.COLOR, multi.TRACE)
+	os.Setenv("WEBHOOK_SECRET", "lmz123")
 	os.Setenv("REPO_MAPPING", "abc=xyz\ngolang-simple-oc4service=infra-golang\ntest=test")
 	os.Setenv("CICD_CONSOLE_DIR", "../../tests/console")
 	os.Setenv("WORKDIR", "../../tests/workdir")
@@ -156,30 +156,6 @@ func TestCICDHandler(t *testing.T) {
 			t.Errorf(fmt.Sprintf("Handler %s returned with incorrect status code - got (%d) wanted (%d)", "CICDHandler ", rr.Code, STATUS))
 		}
 	})
-	/*
-		t.Run("CICDHandler : should fail (repo mapping)", func(t *testing.T) {
-			var STATUS int = 500
-
-			os.Setenv("REPO_MAPPING", "")
-			requestPayload, _ := ioutil.ReadFile("../../tests/prod-release.json")
-			rr := httptest.NewRecorder()
-			req, _ := http.NewRequest("POST", "/api/v1/webhrook", bytes.NewBuffer([]byte(requestPayload)))
-			conn := connectors.NewTestConnectors(logger, "normal")
-			handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				CICDHandler(w, r, conn)
-			})
-			handler.ServeHTTP(rr, req)
-			body, e := ioutil.ReadAll(rr.Body)
-			if e != nil {
-				t.Fatalf("Should not fail : found error %v", e)
-			}
-			logger.Trace(fmt.Sprintf("Response %s", string(body)))
-			// ignore errors here
-			if rr.Code != STATUS {
-				t.Errorf(fmt.Sprintf("Handler %s returned with incorrect status code - got (%d) wanted (%d)", "CICDHandler ", rr.Code, STATUS))
-			}
-		})
-	*/
 
 	t.Run("CICDHandler : should fail (api secret)", func(t *testing.T) {
 
@@ -203,5 +179,4 @@ func TestCICDHandler(t *testing.T) {
 			t.Errorf(fmt.Sprintf("Handler %s returned with incorrect status code - got (%d) wanted (%d)", "CICDHandler ", rr.Code, STATUS))
 		}
 	})
-
 }
